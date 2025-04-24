@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Health System Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-10 font-sans">
+  <div class="max-w-4xl mx-auto space-y-8">
+
+    <h1 class="text-3xl font-bold text-center text-blue-700">Health Information System</h1>
+
+    <!-- Register Client -->
+    <div class="bg-white p-5 shadow rounded space-y-3">
+      <h2 class="text-xl font-semibold text-gray-800">Register New Client</h2>
+      <!-- Updated form fields -->
+      <input type="text" id="name" placeholder="Full Name" class="w-full p-2 border rounded" />
+      <input type="number" id="age" placeholder="Age" class="w-full p-2 border rounded" />
+      <input type="text" id="gender" placeholder="Gender" class="w-full p-2 border rounded" />
+      <button onclick="registerClient()" class="bg-blue-600 text-white px-4 py-2 rounded">Register</button>
+    </div>
+
+    <!-- Create Program -->
+    <div class="bg-white p-5 shadow rounded space-y-3">
+      <h2 class="text-xl font-semibold text-gray-800">Create Health Program</h2>
+      <input type="text" id="programName" placeholder="Program Name" class="w-full p-2 border rounded" />
+      <input type="text" id="programDesc" placeholder="Description" class="w-full p-2 border rounded" />
+      <button onclick="createProgram()" class="bg-green-600 text-white px-4 py-2 rounded">Create Program</button>
+    </div>
+
+    <!-- Enroll Client -->
+    <div class="bg-white p-5 shadow rounded space-y-3">
+      <h2 class="text-xl font-semibold text-gray-800">Enroll Client to Program</h2>
+      <input type="number" id="enrollClientId" placeholder="Client ID" class="w-full p-2 border rounded" />
+      <input type="text" id="enrollProgram" placeholder="Program Name" class="w-full p-2 border rounded" />
+      <button onclick="enrollClient()" class="bg-purple-600 text-white px-4 py-2 rounded">Enroll</button>
+    </div>
+
+    <!-- Search Client -->
+    <div class="bg-white p-5 shadow rounded space-y-3">
+      <h2 class="text-xl font-semibold text-gray-800">Search Clients</h2>
+      <input type="text" id="searchName" placeholder="Client Name" class="w-full p-2 border rounded" />
+      <button onclick="searchClient()" class="bg-yellow-600 text-white px-4 py-2 rounded">Search</button>
+      <div id="results" class="pt-4 space-y-2"></div>
+    </div>
+
+  </div>
+
+  <script>
+    async function registerClient() {
+      const data = {
+        name: document.getElementById('name').value,  // Use 'name' for the full name
+        age: document.getElementById('age').value,    // Age field
+        gender: document.getElementById('gender').value // Gender field
+      };
+
+      const res = await fetch('/register_client', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+      });
+
+      const responseData = await res.json();
+      alert(responseData.message);  // Show the response message
+    }
+
+    async function createProgram() {
+      const data = {
+        name: document.getElementById('programName').value,
+        description: document.getElementById('programDesc').value
+      };
+      const res = await fetch('/create_program', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+      });
+      alert((await res.json()).message);
+    }
+
+    async function enrollClient() {
+      const id = document.getElementById('enrollClientId').value;
+      const program = document.getElementById('enrollProgram').value;
+      const res = await fetch(`/enroll_client/${id}`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({program})
+      });
+      alert((await res.json()).message);
+    }
+
+    async function searchClient() {
+      const name = document.getElementById('searchName').value;
+      const res = await fetch(`/search_client?name=${name}`);
+      const data = await res.json();
+      const container = document.getElementById('results');
+      container.innerHTML = "";
+
+      if (data.results) {
+        data.results.forEach(c => {
+          const div = document.createElement('div');
+          div.className = "p-2 bg-gray-200 rounded";
+          div.innerHTML = `<strong>${c.first_name} ${c.last_name}</strong> - <a class="text-blue-600 underline" href="/profile/${c.id}">View Profile</a>`;
+          container.appendChild(div);
+        });
+      } else {
+        container.textContent = data.message;
+      }
+    }
+  </script>
+</body>
+</html>

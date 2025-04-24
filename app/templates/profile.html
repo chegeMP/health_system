@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Client Profile</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-10">
+  <div class="max-w-2xl mx-auto bg-white shadow p-6 rounded">
+    <h1 class="text-2xl font-bold mb-4 text-blue-700">Client Profile</h1>
+    <div id="profileData" class="space-y-2 text-gray-800">
+      Loading...
+    </div>
+    <a href="/" class="inline-block mt-4 text-sm text-blue-600 underline">Back to Dashboard</a>
+  </div>
+
+  <script>
+    const clientId = document.getElementById('profileData').getAttribute('data-client-id');
+    console.log('Client ID:', clientId);  // Check if clientId is correct
+  
+    fetch(`/api/client/${clientId}`)
+      .then(res => res.json())
+      .then(data => {
+        const container = document.getElementById('profileData');
+        container.innerHTML = `
+          <p><strong>Name:</strong> ${data.name}</p>
+          <p><strong>Email:</strong> ${data.email}</p>
+          <p><strong>Programs:</strong> ${data.programs.join(', ') || 'None'}</p>
+        `;
+      })
+      .catch(error => {
+        const container = document.getElementById('profileData');
+        container.innerHTML = `<p class="text-red-500">Error loading profile data.</p>`;
+        console.error('Error:', error);
+      });
+  </script>
+  
+</body>
+</html>
