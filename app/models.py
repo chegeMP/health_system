@@ -27,8 +27,10 @@ class Client(db.Model):
     name = db.Column(db.String(100), nullable=False)
     age = db.Column(db.Integer, nullable=False)
     gender = db.Column(db.String(10), nullable=False)
+    email = db.Column(db.String(120), nullable=False, unique=True)
 
     programs = db.relationship('Program', secondary=client_program, back_populates='clients')
 
     def __repr__(self):
         return f"<Client {self.name}>"
+

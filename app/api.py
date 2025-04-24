@@ -15,5 +15,6 @@ def get_client_profile(id):
         "name": client.name,
         "age": client.age,
         "gender": client.gender,
+        "email": client.email, 
         "programs": programs
     })

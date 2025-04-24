@@ -30,14 +30,20 @@ def register_client():
     name = data.get('name')
     age = data.get('age')
     gender = data.get('gender')
+    email = data.get('email')
 
-    if not name or not age or not gender:
-        return jsonify({"message": "Name, age, and gender are required!"}), 400
+    if not name or not age or not gender or not email:
+        return jsonify({"message": "Name, age, gender, and email are required!"}), 400
 
-    new_client = Client(name=name, age=age, gender=gender)
+    # Check if email already exists
+    if Client.query.filter_by(email=email).first():
+        return jsonify({"message": "Email already registered!"}), 400
+
+    new_client = Client(name=name, age=age, gender=gender, email=email)
     db.session.add(new_client)
     db.session.commit()
     return jsonify({"message": f"Client {name} registered!"}), 201
+
 
 @main.route('/enroll_client/<int:client_id>', methods=['POST'])
 def enroll_client(client_id):
@@ -67,17 +73,22 @@ def search_client():
     if not name:
         return jsonify({"message": "Please provide a name to search."}), 400
 
-    client = Client.query.filter(Client.name.ilike(f"%{name}%")).first()
+    clients = Client.query.filter(Client.name.ilike(f"%{name}%")).all()
 
-    if client:
-        return jsonify({
+    if not clients:
+        return jsonify({"message": "No clients found!"}), 404
+
+    results = []
+    for client in clients:
+        results.append({
             "id": client.id,
             "name": client.name,
             "age": client.age,
             "gender": client.gender
         })
-    else:
-        return jsonify({"message": "Client not found!"}), 404
+
+    return jsonify({"results": results}), 200
+
 
 @main.route('/view_profile/<int:client_id>', methods=['GET'])
 def view_profile(client_id):

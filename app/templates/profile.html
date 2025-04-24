@@ -3,12 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <title>Client Profile</title>
+  <link rel="stylesheet" href="styles.css">
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 p-10">
   <div class="max-w-2xl mx-auto bg-white shadow p-6 rounded">
     <h1 class="text-2xl font-bold mb-4 text-blue-700">Client Profile</h1>
-    <div id="profileData" class="space-y-2 text-gray-800">
+    <div id="profileData" data-client-id="{{ client_id }}" class="space-y-2 text-gray-800">
       Loading...
     </div>
     <a href="/" class="inline-block mt-4 text-sm text-blue-600 underline">Back to Dashboard</a>
@@ -17,23 +18,20 @@
   <script>
     const clientId = document.getElementById('profileData').getAttribute('data-client-id');
     console.log('Client ID:', clientId);  // Check if clientId is correct
-  
-    fetch(`/api/client/${clientId}`)
+
+    fetch(`/view_profile/${clientId}`)
       .then(res => res.json())
       .then(data => {
         const container = document.getElementById('profileData');
         container.innerHTML = `
           <p><strong>Name:</strong> ${data.name}</p>
           <p><strong>Email:</strong> ${data.email}</p>
-          <p><strong>Programs:</strong> ${data.programs.join(', ') || 'None'}</p>
+          <p><strong>Age:</strong> ${data.age}</p>
+          <p><strong>Gender:</strong> ${data.gender}</p>
+          <p><strong>Programs:</strong> ${data.programs.join(', ')}</p>
         `;
       })
-      .catch(error => {
-        const container = document.getElementById('profileData');
-        container.innerHTML = `<p class="text-red-500">Error loading profile data.</p>`;
-        console.error('Error:', error);
-      });
+      .catch(err => console.error(err));
   </script>
-  
 </body>
 </html>
