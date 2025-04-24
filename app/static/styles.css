@@ -107,37 +107,48 @@ body {
   
 
 
-  /* Button Styles */
-.button {
-  padding: 0.5rem 1rem;
-  border-radius: 0.375rem;
-  font-weight: 600;
-  text-align: center;
-  display: inline-block;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-  cursor: pointer;
-  text-decoration: none;
-}
+  .button {
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    font-weight: 600;
+    text-align: center;
+    display: inline-block;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    cursor: pointer;
+    text-decoration: none;
+    border: 2px solid transparent; /* important to prevent text shift on hover */
+  }
+  
+  /* VIEW PROFILE BUTTON */
+  .button-view {
+    color: #3182ce;
+    border-color: #3182ce;
+    background-color: white; /* light background so it looks like a button */
+  }
+  
+  /* BACK BUTTON */
+  .button-back {
+    color: #4a5568;
+    border-color: #4a5568;
+    background-color: white;
+  }
+  
+  /* HOVER STATES */
+  .button-view:hover {
+    background-color: #3182ce;
+    color: white;
+    transform: scale(1.05);
+  }
+  
+  .button-back:hover {
+    background-color: #4a5568;
+    color: white;
+    transform: scale(1.05);
+  }
+  
 
-.button-view {
-  color: #3182ce;
-  border: 2px solid #3182ce;
-}
 
-.button-view:hover {
-  background-color: #3182ce;
-  color: white;
-  transform: scale(1.05);
-}
-
-.button-back {
-  color: #4a5568;
-  border: 2px solid #4a5568;
-}
-
-.button-back:hover {
-  background-color: #4a5568;
-  color: white;
-  transform: scale(1.05);
-}
-
+  body {
+    background-color: red;
+  }
+  
