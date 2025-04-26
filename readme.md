@@ -1,3 +1,10 @@
+## Documentation
+
+- [Health App Presentation](./presentations/Health_App.pptx) — Approach, Design, and Solution.
+
+
+
+
 Health Information System
 Overview
 The Health Information System is a web application built with Python (Flask), MySQL, and Tailwind CSS. It is designed to manage health programs, register clients, and allow client enrollment and searches. The system provides a dashboard for managing health programs, client details, and interactions within the application.
@@ -38,8 +45,8 @@ Clone this repository:
 bash
 Copy
 Edit
-git clone https://github.com/yourusername/health-information-system.git
-cd health-information-system
+git clone https://github.com/chegeMP/health__system.git
+cd health__system
 Install required Python dependencies:
 
 bash
