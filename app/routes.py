@@ -45,26 +45,33 @@ def register_client():
     return jsonify({"message": f"Client {name} registered!"}), 201
 
 
-@main.route('/enroll_client/<int:client_id>', methods=['POST'])
-def enroll_client(client_id):
+@main.route('/enroll_client_by_name', methods=['POST'])
+def enroll_client_by_name():
     data = request.get_json()
+    name = data.get('name')
     program_name = data.get('program')
 
-    if not program_name:
-        return jsonify({"message": "Program name is required!"}), 400
+    if not name or not program_name:
+        return jsonify({"message": "Name and program are required!"}), 400
 
-    client = Client.query.get_or_404(client_id)
+    client = Client.query.filter_by(name=name).first()
+    if not client:
+        return jsonify({"message": f"Client with name {name} not found!"}), 404
+
     program = Program.query.filter_by(name=program_name).first()
-
     if not program:
-        return jsonify({"message": "Program not found!"}), 404
+        return jsonify({"message": f"Program {program_name} not found!"}), 404
 
+    # Check if the client is already enrolled
     if program in client.programs:
         return jsonify({"message": "Client already enrolled in this program."}), 400
 
+    # Enroll client in the program
     client.programs.append(program)
     db.session.commit()
-    return jsonify({"message": f"Client {client.name} enrolled in {program_name}!"}), 200
+    
+    return jsonify({"message": f"Client {client.name} successfully enrolled in {program_name}!"}), 200
+
 
 @main.route('/search_client', methods=['GET'])
 def search_client():
@@ -102,8 +109,15 @@ def view_profile(client_id):
         "gender": client.gender,
         "programs": programs
     })
+@main.route('/api/get_clients', methods=['GET'])
+def get_clients():
+    clients = Client.query.all()
+    return jsonify([{"id": client.id, "name": client.name} for client in clients]), 200
 
-
+@main.route('/api/get_programs', methods=['GET'])
+def get_programs():
+    programs = Program.query.all()
+    return jsonify([{"id": program.id, "name": program.name} for program in programs]), 200
 
 @main.route('/')
 def index():

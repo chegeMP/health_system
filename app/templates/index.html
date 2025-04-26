@@ -32,12 +32,22 @@
     </div>
 
     <!-- Enroll Client -->
-    <div class="bg-white p-5 shadow rounded space-y-3">
-      <h2 class="text-xl font-semibold text-gray-800">Enroll Client to Program</h2>
-      <input type="number" id="enrollClientId" placeholder="Client ID" class="w-full p-2 border rounded" />
-      <input type="text" id="enrollProgram" placeholder="Program Name" class="w-full p-2 border rounded" />
-      <button onclick="enrollClient()" class="bg-purple-600 text-white px-4 py-2 rounded">Enroll</button>
-    </div>
+<div class="bg-white p-5 shadow rounded space-y-3">
+  <h2 class="text-xl font-semibold text-gray-800">Enroll Client to Program</h2>
+
+  <input list="clientNames" id="enrollClientName" placeholder="Select or type client name" class="w-full p-2 border rounded" />
+<datalist id="clientNames">
+  <!-- Options will be dynamically added -->
+</datalist>
+
+  <select id="enrollProgramDropdown" class="w-full p-2 border rounded">
+    <option value="" disabled selected>Select Program</option>
+    <!-- Options will be dynamically added -->
+  </select>
+
+  <button onclick="enrollClient()" class="bg-purple-600 text-white px-4 py-2 rounded">Enroll</button>
+</div>
+
 
     <!-- Search Client -->
     <div class="bg-white p-5 shadow rounded space-y-3">
@@ -82,15 +92,18 @@
   }
 
   async function enrollClient() {
-    const id = document.getElementById('enrollClientId').value;
-    const program = document.getElementById('enrollProgram').value;
-    const res = await fetch(`/enroll_client/${id}`, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({program})
-    });
-    alert((await res.json()).message);
-  }
+  const clientName = document.getElementById('enrollClientName').value;
+  const programName = document.getElementById('enrollProgramDropdown').value;
+
+  const res = await fetch('/enroll_client_by_name', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name: clientName, program: programName })
+  });
+
+  const responseData = await res.json();
+  alert(responseData.message);
+}
 
   async function searchClient() {
     const name = document.getElementById('searchName').value;
@@ -110,6 +123,31 @@
       container.textContent = data.message || "No clients found.";
     }
   }
+
+  window.onload = async function () {
+  const clientRes = await fetch('/api/get_clients')  ;
+  const programRes = await fetch('/api/get_programs');
+
+  const clients = await clientRes.json();
+  const programs = await programRes.json();
+
+  const clientList = document.getElementById('clientNames');
+clients.forEach(c => {
+  const option = document.createElement('option');
+  option.value = c.name;
+  clientList.appendChild(option);
+});
+
+
+  const programDropdown = document.getElementById('enrollProgramDropdown');
+  programs.forEach(p => {
+    const option = document.createElement('option');
+    option.value = p.name;
+    option.textContent = p.name;
+    programDropdown.appendChild(option);
+  });
+};
+
   </script>
 </body>
 </html>
