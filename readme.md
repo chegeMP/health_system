@@ -1,6 +1,6 @@
 ## Documentation
 
-- [Health App Presentation](./presentations/Health_App.pptx) — Approach, Design, and Solution.
+- [Health App Presentation](./assets/presentations/Health_app.pptx) — Approach, Design, and Solution.
 
 
 
