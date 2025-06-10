@@ -13,7 +13,7 @@ migrate = Migrate()
 def create_app():
     app = Flask(__name__)
 
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@localhost/health_app'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:chege3@localhost/health_app'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SECRET_KEY'] = 'your-secret-key'
 
